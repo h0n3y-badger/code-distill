@@ -1,0 +1,12 @@
+# Core
+openai>=1.30           # talk to LM Studio's OpenAI-compatible endpoint
+datasets>=2.19
+rapidfuzz>=3.9         # fast near-duplicate detection in dedup.py
+
+# Training (Phase 3). Unsloth has a special installer — prefer their instructions:
+#   pip install unsloth
+# It pulls compatible torch / transformers / trl / peft / bitsandbytes.
+# If you install manually instead, you need at least:
+#   trl>=0.9  transformers>=4.44  peft>=0.11  bitsandbytes>=0.43  accelerate>=0.31
+#
+# Quantization (Phase 4) uses llama.cpp — cloned by `make quantize`, no pip dep.

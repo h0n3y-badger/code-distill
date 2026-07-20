@@ -1,0 +1,42 @@
+# --- large / generated artifacts (never commit weights) ---
+.venv/
+gguf/
+out/
+out_1b/
+qwen-coder-7b-mine/
+qwen-coder-1.5b-py/
+base_hf/
+base_1b_hf/
+llama.cpp/
+backups/
+
+# --- caches / logs / scratch ---
+__pycache__/
+*.pyc
+*.log
+serve_tmp.log
+unsloth_compiled_cache/
+
+# --- execution artifacts left in CWD by running model-generated code during eval ---
+*.db
+*.csv
+*.bin
+input*.txt
+output*.txt
+test*.txt
+temp*.txt
+*merged*.txt
+multi*line*.txt
+numbers.txt
+file1.txt
+file2.txt
+empty.txt
+testfile.txt
+MODEL_CARD.md
+
+# --- personal/session automation (machine- & device-specific; contains a
+#     KDE Connect device id and local shutdown logic — not part of the pipeline) ---
+lightning_safe.sh
+watch_train.sh
+refine_pipeline.sh
+refine_tail.sh
