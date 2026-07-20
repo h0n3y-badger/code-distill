@@ -83,6 +83,6 @@ llama-server -m qwen-coder-1.5b-py-Q4_K_M.gguf -c 4096          # OpenAI-compati
   is fully self-generated (no scraped corpus, no ToS-restricted API).
 - **Base model:** [Qwen/Qwen2.5-Coder-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
 - **Teacher:** Qwen/Qwen2.5-Coder-14B-Instruct
-- **Full pipeline:** https://github.com/sudo-lucap/code-distill
+- **Full pipeline:** https://github.com/h0n3y-badger/code-distill
 
 *A companion to the 7B Python/C distill — see the repo for the reproducible pipeline.*

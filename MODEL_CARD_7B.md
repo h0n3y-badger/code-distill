@@ -96,7 +96,7 @@ pipeline — see the repo.
   (no scraped corpus, no ToS-restricted API).
 - **Base model:** [Qwen/Qwen2.5-Coder-7B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct)
 - **Teacher:** Qwen/Qwen2.5-Coder-14B-Instruct
-- **Full training/eval pipeline:** https://github.com/sudo-lucap/code-distill
+- **Full training/eval pipeline:** https://github.com/h0n3y-badger/code-distill
 
 *Built as a learning project in honest, contamination-controlled small-model
 distillation. The interesting artifact is the reproducible pipeline — see the repo.*
