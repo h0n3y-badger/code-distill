@@ -58,3 +58,8 @@ build_v3.out
 eval_v3.out
 serve_v3.log
 gen_c_hard.log
+
+# --- independent benchmark artifacts ---
+bench/*.jsonl
+bench/*.out
+bench/*.json
