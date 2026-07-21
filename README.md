@@ -38,16 +38,25 @@ compiling/running the model's output against held-out tests:
 | Model | Python | C | **Total** |
 |---|---|---|---|
 | Qwen2.5-Coder-7B-Instruct (base) | 77.8% | 47.0% | **60.8%** |
-| distilled student | 79.6% | **63.6%** | **70.8%** |
+| distilled student | **87.0%** | **63.6%** | **74.2%** |
 
-**+10 points overall, driven by C (+16.6).** The base was weak at C (missing
-`#include`s, wrong function/type contracts — modern `gcc` hard-errors on these);
-training on self-contained, contract-explicit C data fixed a large chunk of it.
+**+13.4 points overall** (C +16.6, Python +9.2). The base was weak at C (missing
+`#include`s, wrong contracts — modern `gcc` hard-errors on these); adding
+self-contained, contract-explicit C data plus **complete-program** examples fixed a
+large chunk *and* lifted Python.
 
 A small sibling — a **Python-only 1.5B for an old ThinkPad (CPU inference)** — is
-built by the same pipeline (`train_1b.py` / `build_1b.sh`): **77.8% Python pass@1**
-(vs 74.1% for the stock 1.5B) in a **941 MB** Q4_K_M GGUF — essentially tying the 7B
-at Python while running on CPU. See `RESULTS_1B.md`.
+built by the same pipeline (`train_1b.py` / `build_1b.sh`): **81.5% Python pass@1**
+(vs 74.1% for the stock 1.5B) in a **941 MB** Q4_K_M GGUF — *beating a stock 7B at
+Python* while running on CPU. See `RESULTS_1B.md`.
+
+### Complete programs, not just functions
+An early version scored well on function+assert tasks but wrote clumsy code for
+real "write me a calculator" asks (it emitted `sys.argv` stubs, not interactive
+programs). Fix: add **complete-program** training data — teacher-generated *and*
+hand-authored gold (`gen_programs.py`, `gold_examples.py`), each run-verified — and
+a **practical smoke test** (`smoke_test.py`) that runs the output. See `W541_USAGE.md`
+for how to actually run a small model well (chat template + low temperature matter).
 
 ## Quickstart
 
@@ -94,8 +103,12 @@ Kept here because the negative results are the honest part:
 - **Always compare against the base.** A refinement round looked flat run-to-run —
   but vs. the *stock* base the core distillation was clearly worth it (+10 pts).
   Without the baseline you can't tell adaptation from sampling noise.
-- Keep long generation **separate** from the train/eval tail (a >60 min combined job
-  got killed mid-merge).
+- **Eval the real task.** Function+assert pass@1 looked fine while the model was bad
+  at "write me a program." A practical smoke test (run the output) caught what the
+  narrow metric missed.
+- **The fp16 merge is a RAM cliff.** `save_pretrained_merged` on a 7B needs ~15 GB;
+  running it *inside* the training process (optimizer/grad buffers still live) OOM'd.
+  Merging the saved adapter in a **fresh process** (`merge_adapter.py`) fits.
 
 ## Repo layout
 

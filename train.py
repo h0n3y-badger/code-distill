@@ -3,11 +3,14 @@
 Run AFTER unloading the teacher in LM Studio (both won't fit in 16GB).
 Trains a LoRA, then merges to a 16-bit HF model in MERGED_DIR for GGUF conversion.
 """
-import json
+import os, json
 from unsloth import FastLanguageModel
 from trl import SFTTrainer, SFTConfig
 from datasets import Dataset
 import config as C
+
+TRAIN_DATA = os.environ.get("TRAIN_DATA", C.CLEAN_FILE)
+OUT_DIR    = os.environ.get("OUT_DIR", C.MERGED_DIR)
 
 model, tok = FastLanguageModel.from_pretrained(
     model_name=C.STUDENT_MODEL,
@@ -38,7 +41,7 @@ def _valid(msgs):
                and m["content"].strip() for m in msgs)
 
 texts, skipped = [], 0
-with open(C.CLEAN_FILE) as f:
+with open(TRAIN_DATA) as f:
     for line in f:
         line = line.strip()
         if not line:
@@ -49,7 +52,7 @@ with open(C.CLEAN_FILE) as f:
             continue
         texts.append(tok.apply_chat_template(
             msgs, tokenize=False, add_generation_prompt=False))
-print(f"loaded {len(texts)} training examples from {C.CLEAN_FILE} "
+print(f"loaded {len(texts)} training examples from {TRAIN_DATA} "
       f"(skipped {skipped} with empty/invalid content)")
 ds = Dataset.from_dict({"text": texts})
 
@@ -76,5 +79,5 @@ trainer = SFTTrainer(
 trainer.train()
 
 # Merge LoRA into base -> 16-bit HF model, ready for llama.cpp conversion.
-model.save_pretrained_merged(C.MERGED_DIR, tok, save_method="merged_16bit")
-print(f"Merged model written to ./{C.MERGED_DIR}")
+model.save_pretrained_merged(OUT_DIR, tok, save_method="merged_16bit")
+print(f"Merged model written to ./{OUT_DIR}")

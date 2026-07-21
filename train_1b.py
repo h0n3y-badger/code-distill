@@ -8,9 +8,10 @@ from trl import SFTTrainer, SFTConfig
 from datasets import Dataset
 import config as C
 
+import os
 STUDENT = "unsloth/Qwen2.5-Coder-1.5B-Instruct"
-OUT_DIR = "qwen-coder-1.5b-py"
-DATA    = "python_clean.jsonl"
+OUT_DIR = os.environ.get("OUT_DIR", "qwen-coder-1.5b-py")
+DATA    = os.environ.get("TRAIN_DATA", "python_clean.jsonl")
 
 model, tok = FastLanguageModel.from_pretrained(
     model_name=STUDENT, max_seq_length=C.MAX_SEQ_LEN, load_in_4bit=True)

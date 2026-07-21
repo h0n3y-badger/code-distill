@@ -24,8 +24,9 @@ distilled from a **Qwen2.5-Coder-14B-Instruct** teacher on locally-generated,
 comfortably on **CPU** on old / low-power hardware (built to run on a 2014 ThinkPad
 W541, no GPU needed).
 
-> **TL;DR** — 77.8% Python pass@1 in under 1 GB. That's +3.7 points over the stock
-> 1.5B, and it essentially **ties a 7B model at Python** while being ~5× smaller.
+> **TL;DR** — 81.5% Python pass@1 in under 1 GB. That's +7.4 points over the stock
+> 1.5B, and it **beats a stock 7B at Python** while being ~5× smaller — plus it now
+> writes complete, interactive programs, not just bare functions.
 
 ## Results (execution-based pass@1, Python)
 
@@ -35,10 +36,10 @@ was fine-tuned from.
 | Model | Python pass@1 |
 |---|---|
 | Qwen2.5-Coder-1.5B-Instruct (base) | 74.1% (40/54) |
-| **This model** | **77.8%** (42/54) |
+| **This model** | **81.5%** (44/54) |
 
-For context, on the same eval the 7B models scored 77.8% (base) / 79.6% (distilled)
-at Python — so this 941 MB model is right there with them *for Python*.
+For context, on the same eval the stock 7B scored 77.8% at Python — this 941 MB
+model edges it out *for Python*.
 
 *pass@1 = the model's code was executed against held-out tests and had to pass.
 Carries ±1–2 samples of sampling noise.*
@@ -47,8 +48,21 @@ Carries ±1–2 samples of sampling noise.*
 
 Teacher (Qwen2.5-Coder-14B) generates Python tasks + solutions + tests → each is
 **executed**, only passing samples kept → QLoRA SFT of the 1.5B student (Unsloth,
-r=16, 3 epochs) on ~376 Python samples → merged 16-bit → GGUF Q4_K_M. Same pipeline
-as the 7B sibling, Python-only.
+r=16, 3 epochs) → merged 16-bit → GGUF Q4_K_M. Same pipeline as the 7B sibling,
+Python-only.
+
+Training data mixes two styles (~566 samples): **execution-verified functions**
+*and* **complete, runnable programs from natural requests** (calculators, CLIs,
+games, file tools — teacher-generated + hand-authored gold, each run-verified). The
+complete-program half is what makes it write whole interactive programs (using
+`input()`, menus, etc.) rather than bare functions.
+
+## ⚠️ Run it right or it feels dumb
+
+A 1.5B **must** be run with the **chat template applied** and **low temperature**, or
+it rambles. Use `llama-server` (applies the template automatically) or `llama-cli -cnv`
+with `--temp 0.2`. Do **not** use plain `llama-cli -p "..."` (raw completion, temp 0.8) —
+that's the usual reason a small local model seems broken.
 
 ## Evaluation methodology
 

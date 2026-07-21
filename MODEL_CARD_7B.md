@@ -23,9 +23,9 @@ entirely on locally-generated, **execution-verified** synthetic data on a single
 16 GB consumer GPU (RTX 5070 Ti).
 
 > **TL;DR** — On a held-out, execution-scored eval it lifts the base model from
-> **60.8% → 70.8%** pass@1, almost entirely by making **C** much stronger
-> (**47% → 64%**), while holding Python roughly steady. It is *specialized*, not
-> a general upgrade — read the honest caveats below.
+> **60.8% → 74.2%** pass@1: **C** jumps (47% → 64%) and **Python** jumps too
+> (78% → 87%). It also writes complete, interactive programs from natural asks,
+> not just bare functions. Specialized for Python/C — read the honest caveats below.
 
 ## Results (execution-based pass@1)
 
@@ -35,8 +35,8 @@ model was fine-tuned from, so this isolates what the fine-tune did.
 | Model | Python | C | **Total** |
 |---|---|---|---|
 | Qwen2.5-Coder-7B-Instruct (base) | 77.8% (42/54) | 47.0% (31/66) | **60.8%** (73/120) |
-| **This model** | 79.6% (43/54) | **63.6%** (42/66) | **70.8%** (85/120) |
-| Δ | +1.8 (noise) | **+16.6** | **+10.0** |
+| **This model** | 87.0% (47/54) | **63.6%** (42/66) | **74.2%** (89/120) |
+| Δ | **+9.2** | **+16.6** | **+13.4** |
 
 *pass@1 = the model's code was compiled/run against held-out tests and had to pass.
 Numbers carry ±1–2 samples of run-to-run sampling noise (temperature 0.2).*
@@ -50,8 +50,13 @@ Numbers carry ±1–2 samples of run-to-run sampling noise (temperature 0.2).*
    `gcc`-compiled-and-run against their tests; **only samples that pass are kept.**
    The teacher's C prompt is constrained to emit self-contained code (all `#include`s)
    with explicit function/type contracts.
-3. **QLoRA SFT** of the 7B student (Unsloth, r=16, 2 epochs, 4-bit base) on ~1k
-   deduplicated samples, then merged to 16-bit and quantized to GGUF Q5_K_M.
+3. **QLoRA SFT** of the 7B student (Unsloth, r=16, 2 epochs, 4-bit base) on ~1.25k
+   deduplicated samples — a mix of execution-verified **functions** and complete,
+   run-verified **programs from natural requests** — then merged to 16-bit and
+   quantized to GGUF Q5_K_M.
+
+> Run with the chat template applied and low temperature (~0.2) — via `llama-server`
+> or `llama-cli -cnv`. Raw `-p` completion mode at default temp will underperform.
 
 ## Evaluation methodology (and why it's not HumanEval)
 
@@ -64,15 +69,15 @@ directly comparable to leaderboard scores.
 
 ## Honest limitations
 
-- **Specialized, not universally better.** The gain is concentrated in C; Python
-  moved within noise. Do not expect a general capability jump over the base.
+- **Specialized, not universally better.** Gains are in Python and C specifically;
+  don't expect improvement in other languages.
 - **Eval favors the model's home distribution.** The eval tasks come from the same
   teacher/family and follow the same conventions the model was trained on (e.g. the
   C convention of "no `main()`, self-contained solution"). A neutral benchmark would
   likely show a smaller gap.
-- **Small-model ceiling.** A follow-up round that doubled the C data moved pass@1
-  by *noise* — data scaling hit diminishing returns at 7B for the remaining
-  (contract/logic) failure modes.
+- **C hit a ceiling.** C stayed at ~64% across data-scaling rounds — the remaining
+  C failures are contract/naming and genuine logic bugs that more of the same data
+  doesn't fix at 7B. Python and complete-program ability, by contrast, kept improving.
 - English-only prompts; Python/C focus (HTML/Java were minor in training).
 
 ## Usage

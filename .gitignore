@@ -40,3 +40,12 @@ lightning_safe.sh
 watch_train.sh
 refine_pipeline.sh
 refine_tail.sh
+
+# --- v2 additions: derived data, eval outputs, extra model dirs ---
+out_1b/
+smoke_out/
+python_v2.jsonl
+clean_v2.jsonl
+qwen-coder-1.5b-py-v2/
+base_1b_hf/
+qwen-coder-7b-mine-v2/
