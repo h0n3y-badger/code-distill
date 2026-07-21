@@ -9,25 +9,36 @@ Same protocol on both models (temp 0.2, Q5_K_M, one prompt each, execution-score
 | Benchmark (unseen) | base 7B-Instruct | distilled v3 | Δ |
 |---|---|---|---|
 | HumanEval (164, Python) | 86.0% (141/164) | 86.0% (141/164) | **0.0** |
-| neutral-C (12, hand-authored, gcc-verified) | 66.7% (8/12) | **83.3%** (10/12) | **+16.7pp** |
+| neutral-C (30, hand-authored, gcc-verified) | 66.7% (20/30) | **96.7%** (29/30) | **+30.0pp** |
 
-## Verdict (honest, both directions)
+(An earlier 12-problem neutral-C run showed the same direction: base 66.7% → v3 83.3%.)
 
-- **The C gain is real and generalizes.** On a completely independent C set —
-  different phrasing, different problems, my own hidden tests — v3 beats the stock
-  base by ~17 points, consistent with the +3–6pp we saw on our home C eval. The
-  header-targeted distillation genuinely improved C, it isn't home-cooking.
+## Verdict (honest, and more nuanced than the headline)
+
+- **The C gain is real AND it's mostly about dialect discipline.** On 30 unseen,
+  differently-phrased C problems v3 scores 96.7% vs the base's 66.7%. But when you
+  read *why* the base fails: **9 of its 10 failures are C++ drift** — it emits
+  `#include <iostream>` / `<cmath>` / `<algorithm>` and C++ conventions, which do
+  not compile under `gcc -std=c11`. Only ~1 was an actual logic bug. So the precise
+  claim is not "v3 is 30 points smarter at C algorithms" — it's **"v3 reliably
+  produces standalone, C11-compilable C, while the stock base frequently slips into
+  C++."** For a C-focused local tool that's exactly the useful improvement, and it's
+  precisely what the self-contained-C distillation instilled — but it's dialect/
+  compilability, not raw reasoning.
 - **The Python "gain" was mostly home-distribution.** Our home eval showed the
   student ~+9pp over base at Python (78% → 87%). On neutral HumanEval the two are
-  **dead even (86.0% each)**. So most of that Python delta was our eval favoring
-  the model's trained conventions — exactly the benchmaxxing risk we worried about.
-  The upside: the C-focused v3 training did **not damage** general Python either.
+  **dead even (86.0% each)** — most of that delta was our eval favoring trained
+  conventions. Upside: the C-focused v3 did **not damage** general Python.
 
 ## Caveats
-
-- neutral-C is only 12 problems: ±1 problem ≈ ±8pp, so treat +16.7pp as
-  "clearly positive, magnitude noisy," not precise. HumanEval (164) is solid.
-- HumanEval is instruction-completion Python; our eval and neutral-C use the
-  no-`main()`/assert C convention. Different formats on purpose.
+- neutral-C is hand-authored by the author (training-disjoint, references
+  gcc-verified) — independent of the training data, but not a community-standard
+  set like HumanEval. n=30, so ±1 problem ≈ ±3pp.
+- The base-vs-v3 C gap partly reflects prompt interpretation (base writing C++ when
+  asked for a C function under `gcc -std=c11`). A "write ISO C, no C++ headers"
+  instruction would likely narrow it — but the whole point of the distillation was
+  to bake that discipline in rather than rely on prompting.
+- HumanEval is instruction-completion Python; neutral-C uses the no-`main()`/assert
+  C convention. Different formats on purpose.
 - Reproduce: `MODEL_TAG=<id> .venv/bin/python bench_humaneval.py` and
   `bench_c_neutral.py`, with that model served on :8091.
