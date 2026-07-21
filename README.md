@@ -58,6 +58,26 @@ hand-authored gold (`gen_programs.py`, `gold_examples.py`), each run-verified �
 a **practical smoke test** (`smoke_test.py`) that runs the output. See `W541_USAGE.md`
 for how to actually run a small model well (chat template + low temperature matter).
 
+### Pushing C further (v3): where the ceiling actually is
+A later round chased C specifically. `diag_c.py` showed the residual C failures
+were dominated by `missing_include` — and the training C data used the *uncommon*
+headers barely at all (`<limits.h>` 4%, `<ctype.h>` 3%, `<math.h>` 2%), while the
+eval leaned on exactly those (`INT_MIN`, `isalpha`, `sqrt`). So we added
+**header-targeted C data**: 60 teacher-generated samples steered into topics that
+*force* those headers (`gen_c_hard.py`) plus 15 hand-authored, gcc-verified gold
+examples (`gold_c.py`). Retraining on it lifted **C 63.6% → 66.7%** (a second
+independent diagnosis run scored 69.7%) and roughly halved the runtime-failure
+bucket, at the cost of ~2 Python samples (noise-range; total pass@1 flat).
+
+The honest finding: that was most of the recoverable headroom. Re-diagnosing v3
+showed the *remaining* C failures are ~⅔ **contract/naming mismatch** (the hidden
+test calls `da_init`/`create`/… or a struct the model named differently) and
+genuine logic bugs — not missing headers. Several failures that *look* like
+missing includes are actually cascade errors: the model already emitted
+`#include <stdlib.h>`, but a structural mismatch upstream made `free`/`malloc`
+read as undeclared. This is the documented small-model ceiling: once the
+mechanical include gaps are closed, more of the same data moves pass@1 by noise.
+
 ## Quickstart
 
 ```bash
@@ -122,6 +142,9 @@ Kept here because the negative results are the honest part:
 | `eval.py` / `eval_py.py` | execution pass@1 |
 | `baseline.sh` | stock-model baseline for honest comparison |
 | `diag_c.py`, `test_autoinclude.py`, `c_postprocess.py` | C failure diagnosis + include fixer |
+| `gen_c_hard.py` / `gold_c.py` | header-targeted C data (teacher-gen + gcc-verified gold) |
+| `datalib.py` | pure data helpers: row validity + C header-completeness lint |
+| `tests/` | regression suite (`make test`): verify gate, data shape, C includes, eval disjointness |
 
 ## License
 

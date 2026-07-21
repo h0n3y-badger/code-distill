@@ -8,6 +8,7 @@ from unsloth import FastLanguageModel
 from trl import SFTTrainer, SFTConfig
 from datasets import Dataset
 import config as C
+from datalib import is_valid_messages as _valid
 
 TRAIN_DATA = os.environ.get("TRAIN_DATA", C.CLEAN_FILE)
 OUT_DIR    = os.environ.get("OUT_DIR", C.MERGED_DIR)
@@ -31,15 +32,7 @@ model = FastLanguageModel.get_peft_model(
 # We hand pyarrow only strings — never the nested `messages`/`tests` structures,
 # whose per-row shape varies (teacher wrote `tests` as string vs array, etc.),
 # which is what made both load_dataset() and Dataset.from_list(rows) fail.
-def _valid(msgs):
-    """A usable turn pair: every message has non-empty string content.
-    (~5% of generations had a null/empty assistant reply — the chat template
-    can't concatenate None, and an empty target teaches nothing anyway.)"""
-    if not isinstance(msgs, list) or len(msgs) < 2:
-        return False
-    return all(isinstance(m, dict) and isinstance(m.get("content"), str)
-               and m["content"].strip() for m in msgs)
-
+# _valid == datalib.is_valid_messages (shared with the regression tests).
 texts, skipped = [], 0
 with open(TRAIN_DATA) as f:
     for line in f:
@@ -78,6 +71,15 @@ trainer = SFTTrainer(
 
 trainer.train()
 
-# Merge LoRA into base -> 16-bit HF model, ready for llama.cpp conversion.
-model.save_pretrained_merged(OUT_DIR, tok, save_method="merged_16bit")
-print(f"Merged model written to ./{OUT_DIR}")
+# The end-of-training fp16 merge is a ~15GB RAM cliff (optimizer/grad buffers are
+# still resident here). On a tight-RAM box set SKIP_MERGE=1 to just save the LoRA
+# adapter and merge later in a fresh process via merge_adapter.py.
+if os.environ.get("SKIP_MERGE") == "1":
+    adapter_dir = os.environ.get("ADAPTER_DIR", "out_adapter")
+    model.save_pretrained(adapter_dir)
+    tok.save_pretrained(adapter_dir)
+    print(f"Adapter saved to ./{adapter_dir} (merge skipped; run merge_adapter.py)")
+else:
+    # Merge LoRA into base -> 16-bit HF model, ready for llama.cpp conversion.
+    model.save_pretrained_merged(OUT_DIR, tok, save_method="merged_16bit")
+    print(f"Merged model written to ./{OUT_DIR}")

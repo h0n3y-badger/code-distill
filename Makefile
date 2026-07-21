@@ -1,4 +1,4 @@
-.PHONY: install install-train generate dedup train quantize eval clean help
+.PHONY: install install-train generate dedup train quantize eval test clean help
 
 VENV := .venv
 PY   := $(VENV)/bin/python
@@ -11,6 +11,7 @@ help:
 	@echo "  make train      Phase 3 - UNLOAD teacher first! QLoRA -> merged model"
 	@echo "  make quantize   Phase 4 - GGUF + Q5_K_M"
 	@echo "  make eval       Phase 5 - load student in LM Studio, then run"
+	@echo "  make test       run the regression suite (tests/, stdlib unittest)"
 	@echo "  make clean      remove generated artifacts (keeps raw.jsonl + .venv)"
 
 # Arch ships only current Python; uv fetches a managed 3.12 (Unsloth-compatible).
@@ -42,6 +43,10 @@ quantize: $(PY)
 eval: $(PY)
 	@echo ">> Load your quantized student in LM Studio, set STUDENT_ID if needed."
 	$(PY) eval.py
+
+test: $(PY)
+	@echo ">> regression tests (pure/fast; C cases need gcc, no model/server needed)"
+	$(PY) -m unittest discover -s tests -v
 
 clean:
 	rm -rf out gguf $(shell $(PY) -c 'import config;print(config.MERGED_DIR)' 2>/dev/null) \

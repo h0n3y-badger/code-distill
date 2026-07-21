@@ -49,3 +49,12 @@ clean_v2.jsonl
 qwen-coder-1.5b-py-v2/
 base_1b_hf/
 qwen-coder-7b-mine-v2/
+
+# --- v3 additions: C header-targeted round ---
+clean_v3.jsonl          # derived concatenation (clean_v2 + c_hard + gold_c)
+out_v3/                 # LoRA adapter checkpoint
+qwen-coder-7b-mine-v3/  # merged fp16 model
+build_v3.out
+eval_v3.out
+serve_v3.log
+gen_c_hard.log
