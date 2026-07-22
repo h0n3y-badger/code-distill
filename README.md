@@ -10,6 +10,15 @@ The goal was not to top a leaderboard. It was to answer a concrete question —
 and prove it honestly?"* — and to avoid the **benchmaxxing trap** (tuning toward, or
 contaminating on, a public benchmark) at every step.
 
+## Released model
+
+The **universal** model built with this pipeline — coding + web design + general
+chat + **tool / MCP function-calling** in one local 7B — is published on Hugging Face:
+
+**➡️ [h0ney-badger/qwen2.5-7b-universal-distill](https://huggingface.co/h0ney-badger/qwen2.5-7b-universal-distill)** — fp16 safetensors + a 5.1 GB `Q5_K_M` GGUF.
+
+The [model card](https://huggingface.co/h0ney-badger/qwen2.5-7b-universal-distill) has the frozen "constant test" results (tool-calling 25% → 100%) and the hard-won finding about dead tool-token embeddings in the Coder base.
+
 ## What it does
 
 ```
