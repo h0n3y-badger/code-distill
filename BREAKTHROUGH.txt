@@ -1,0 +1,1 @@
+v10 FIXES the tool-call problem. Verified LIVE on a full HTML artifact: "search & update" AND "no-HTML, just search" both now fire searxng, and a plain follow-up gets prose (not a code dump). No regression: web 100%, tools 100%, chat 100%, C 42% (normal noise band). artifact_search 3/3. Staged in LM Studio as v10 for you to re-test. Publish-ready on your OK.

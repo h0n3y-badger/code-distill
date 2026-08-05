@@ -1,0 +1,938 @@
+{
+ "_note": "FROZEN constant test for the universal model. Do NOT edit between versions \u2014 comparability depends on it. C axis is drawn from the first 12 C rows of eval_set.jsonl (execution-verified). web/tools/chat below are hand-authored golden items.",
+ "web": [
+  {
+   "prompt": "Build a complete, self-contained, accessible HTML5 page for a small coffee shop landing page. Include a <header> with a <nav>, a hero section with a main heading, an 'About' section, and a <footer>. Put all CSS in an inline <style> block.",
+   "full": true,
+   "require_valid": true,
+   "must_contain": [
+    "<!doctype",
+    "<header",
+    "<nav",
+    "<footer",
+    "<h1",
+    "<style"
+   ]
+  },
+  {
+   "prompt": "Build a complete HTML page containing an accessible contact form with fields for name, email, and message, plus a submit button. Every field must have a <label>.",
+   "full": true,
+   "require_valid": true,
+   "must_contain": [
+    "<form",
+    "<label",
+    "type=[\"']?email",
+    "<textarea",
+    "(<button|type=[\"']?submit)"
+   ]
+  },
+  {
+   "prompt": "Create an HTML table that displays three products with the columns Name, Price, and Stock. Include a proper table header row.",
+   "full": false,
+   "require_valid": true,
+   "must_contain": [
+    "<table",
+    "(<thead|<th)",
+    "<td",
+    "<tr"
+   ]
+  },
+  {
+   "prompt": "The following navbar markup is broken. Fix it so all tags are correctly closed and nested, and return the corrected HTML:\n<nav><ul><li><a href='/'>Home<li><a href='/about'>About</a></li></ul>",
+   "full": false,
+   "require_valid": true,
+   "must_contain": [
+    "<nav",
+    "<ul",
+    "<li",
+    "</li>",
+    "</a>"
+   ]
+  },
+  {
+   "prompt": "Add mobile-first responsive CSS using flexbox to style a horizontal navigation bar with four links that stacks vertically on narrow screens. Return one HTML fragment with an inline <style> block and the nav markup.",
+   "full": false,
+   "require_valid": true,
+   "must_contain": [
+    "@media",
+    "flex",
+    "<nav",
+    "<style"
+   ]
+  },
+  {
+   "prompt": "Build a reusable HTML+CSS 'product card' component with a product image, a title, a short description, and a price. Include an inline <style> block. The image must have alt text.",
+   "full": false,
+   "require_valid": true,
+   "must_contain": [
+    "<img",
+    "alt=",
+    "<style",
+    "class="
+   ]
+  },
+  {
+   "prompt": "Rewrite this to be accessible and semantic, returning corrected HTML: <div class='btn' onclick='submitForm()'>Submit</div>",
+   "full": false,
+   "require_valid": true,
+   "must_contain": [
+    "<button"
+   ]
+  },
+  {
+   "prompt": "Write a complete HTML page with a button and some text. Add vanilla JavaScript (in a <script> tag) that toggles a 'dark' CSS class on the <body> when the button is clicked.",
+   "full": true,
+   "require_valid": true,
+   "must_contain": [
+    "<script",
+    "addEventListener",
+    "classList",
+    "dark"
+   ]
+  }
+ ],
+ "tools": [
+  {
+   "prompt": "What's the weather like in Tokyo right now?",
+   "expect": {
+    "tool": "get_weather"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "get_weather",
+      "description": "Get the current weather for a city",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "city": {
+         "type": "string",
+         "description": "City name"
+        }
+       },
+       "required": [
+        "city"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "Search the web and tell me the name of the tallest mountain on Earth.",
+   "expect": {
+    "tool": "web_search"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "get_weather",
+      "description": "Get weather for a city",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "city": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "city"
+       ]
+      }
+     }
+    },
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web for information",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    },
+    {
+     "type": "function",
+     "function": {
+      "name": "send_email",
+      "description": "Send an email",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "to": {
+         "type": "string"
+        },
+        "body": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "to",
+        "body"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "Compute 47 times 89 for me.",
+   "expect": {
+    "tool": "calculator"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "calculator",
+      "description": "Evaluate an arithmetic expression",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "expression": {
+         "type": "string",
+         "description": "e.g. '2 + 2'"
+        }
+       },
+       "required": [
+        "expression"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "Write me a short haiku about autumn leaves.",
+   "expect": {
+    "none": true
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "get_weather",
+      "description": "Get weather for a city",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "city": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "city"
+       ]
+      }
+     }
+    },
+    {
+     "type": "function",
+     "function": {
+      "name": "send_email",
+      "description": "Send an email",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "to": {
+         "type": "string"
+        },
+        "body": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "to",
+        "body"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "Schedule a dentist appointment titled 'Dentist checkup' on 2026-08-03 at 14:30.",
+   "expect": {
+    "tool": "create_event"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "create_event",
+      "description": "Create a calendar event",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "title": {
+         "type": "string"
+        },
+        "date": {
+         "type": "string",
+         "description": "YYYY-MM-DD"
+        },
+        "time": {
+         "type": "string",
+         "description": "HH:MM"
+        }
+       },
+       "required": [
+        "title",
+        "date",
+        "time"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "List the files in the directory /home/user/docs.",
+   "expect": {
+    "tool": "fs_list"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "fs_read",
+      "description": "Read a file's contents",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "path": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "path"
+       ]
+      }
+     }
+    },
+    {
+     "type": "function",
+     "function": {
+      "name": "fs_list",
+      "description": "List files in a directory",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "dir": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "dir"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "Open a GitHub issue in the repo owner/webapp titled 'Crash on save' describing that the app crashes whenever a user saves a document.",
+   "expect": {
+    "tool": "github_create_issue"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "github_create_issue",
+      "description": "Create a GitHub issue",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "repo": {
+         "type": "string"
+        },
+        "title": {
+         "type": "string"
+        },
+        "body": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "repo",
+        "title",
+        "body"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "Explain in your own words what photosynthesis is.",
+   "expect": {
+    "none": true
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "convert_units",
+      "description": "Convert between units",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "value": {
+         "type": "number"
+        },
+        "from": {
+         "type": "string"
+        },
+        "to": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "value",
+        "from",
+        "to"
+       ]
+      }
+     }
+    },
+    {
+     "type": "function",
+     "function": {
+      "name": "get_stock_price",
+      "description": "Get a stock price",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "ticker": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "ticker"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "chat": [
+  {
+   "prompt": "Explain how a bill becomes a law in the United States, in simple numbered steps.",
+   "must_include": [
+    "congress"
+   ]
+  },
+  {
+   "prompt": "I'm nervous about a job interview tomorrow. Give me three concrete, practical tips.",
+   "must_include": []
+  },
+  {
+   "prompt": "Summarize the water cycle in exactly two sentences.",
+   "must_include": [
+    "evapor"
+   ]
+  },
+  {
+   "prompt": "What's the difference between a compiler and an interpreter?",
+   "must_include": [
+    "compil",
+    "interpret"
+   ]
+  },
+  {
+   "prompt": "Suggest a simple 3-day vegetarian dinner plan, one dish per day.",
+   "must_include": []
+  },
+  {
+   "prompt": "Rewrite this message to sound more polite and professional: 'Send me the report now.'",
+   "must_include": []
+  }
+ ],
+ "_note_v8": "ADDED for v8 (does not touch the frozen axes above). modeswitch: after an assistant artifact turn, a plain follow-up must get PROSE (no code fence, no tool_call). subtask: a 'look up X then build' ask must FIRE the tool instead of hallucinating.",
+ "modeswitch": [
+  {
+   "history": [
+    {
+     "role": "user",
+     "content": "Build a small HTML card for the book 'Dune'."
+    },
+    {
+     "role": "assistant",
+     "content": "Here's the HTML:\n```html\n<div class=\"card\">\n  <h2>Dune</h2>\n  <p>by Frank Herbert</p>\n</div>\n```"
+    }
+   ],
+   "question": "Thanks! Totally unrelated question \u2014 what's the capital of Japan?",
+   "must_include": [
+    "Tokyo"
+   ]
+  },
+  {
+   "history": [
+    {
+     "role": "user",
+     "content": "Build an HTML table with two rows for a to-do list."
+    },
+    {
+     "role": "assistant",
+     "content": "Here's the HTML:\n```html\n<table>\n  <tr><th>Task</th><th>Done</th></tr>\n  <tr><td>Laundry</td><td>No</td></tr>\n</table>\n```"
+    }
+   ],
+   "question": "Great. In a sentence, what's the main difference between HTML and CSS?",
+   "must_include": [
+    "css"
+   ]
+  },
+  {
+   "history": [
+    {
+     "role": "user",
+     "content": "Build a simple HTML contact form with a name field."
+    },
+    {
+     "role": "assistant",
+     "content": "Here's the HTML:\n```html\n<form>\n  <label>Name <input name=\"name\"></label>\n  <button>Send</button>\n</form>\n```"
+    }
+   ],
+   "question": "Perfect. Switching topics \u2014 got a good beginner tip for learning to cook?",
+   "must_include": []
+  }
+ ],
+ "subtask": [
+  {
+   "prompt": "Search the web for the current population of Canada, then write me a one-paragraph HTML summary that includes the number.",
+   "expect": {
+    "tool": "web_search"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web for information",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "Look up the current weather in Paris, then build a small HTML weather card showing it.",
+   "expect": {
+    "tool": "get_weather"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "get_weather",
+      "description": "Get the current weather for a city",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "city": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "city"
+       ]
+      }
+     }
+    },
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "prompt": "Get the latest stock price for AAPL and put it into a small HTML badge.",
+   "expect": {
+    "tool": "get_stock_price"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "get_stock_price",
+      "description": "Get a stock price by ticker",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "ticker": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "ticker"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "_note_artifact_search": "v9 axis for the v8 field-test failure: an HTML artifact ALREADY exists in history, then the user asks to SEARCH for real info and update it. The model must emit a tool_call (not keep editing blind, not embed JS). Mirrors the real Starship/searxng chat.",
+ "artifact_search": [
+  {
+   "history": [
+    {
+     "role": "user",
+     "content": "Build a small HTML page about the Eiffel Tower."
+    },
+    {
+     "role": "assistant",
+     "content": "Here's the HTML:\n```html\n<!doctype html>\n<html>\n  <body>\n    <h1>Eiffel Tower</h1>\n    <p>A landmark in Paris, France.</p>\n  </body>\n</html>\n```"
+    }
+   ],
+   "enrich": "Now search the web for the Eiffel Tower's exact current height and update the page with it.",
+   "expect": {
+    "tool": "web_search"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web for information",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "history": [
+    {
+     "role": "user",
+     "content": "Build a small HTML page explaining the SpaceX Starship Flight 13 launch profile."
+    },
+    {
+     "role": "assistant",
+     "content": "Here's the HTML:\n```html\n<!doctype html>\n<html>\n  <body>\n    <h1>Starship Flight 13</h1>\n    <p>A test flight of SpaceX's Starship vehicle.</p>\n  </body>\n</html>\n```"
+    }
+   ],
+   "enrich": "No, actually search spacex.com for the real flight plan and update the page \u2014 I want a tool call, not a guess.",
+   "expect": {
+    "tool": "web_search"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web for information",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "history": [
+    {
+     "role": "user",
+     "content": "Build a small HTML page about the company Acme Corp."
+    },
+    {
+     "role": "assistant",
+     "content": "Here's the HTML:\n```html\n<!doctype html>\n<html>\n  <body>\n    <h1>Acme Corp</h1>\n    <p>A fictional company.</p>\n  </body>\n</html>\n```"
+    }
+   ],
+   "enrich": "Search the web for their latest news and add a news section to the page.",
+   "expect": {
+    "tool": "web_search"
+   },
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web for information",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "_note_research_prose": "v12: FAITHFUL to the field. LARGE noisy searxng-style blob (~24 results) + the final answer must be PLAIN PROSE. Sampled at RP_TEMP (default 0.8 = LM Studio GUI default) x RP_SAMPLES because the failure is temp+blob-size driven (v11: 0% @temp0.4 small blob, ~17% @temp0.8 big blob). Two variants: 'fresh' (no artifact in history) and 'artifact' (artifact-mode). Gate=is_prose_reply AND no raw HTML tags. Intent contrast lives in enrich/artifact_search (those SHOULD still emit the doc).",
+ "research_prose": [
+  {
+   "variant": "fresh",
+   "history": [
+    {
+     "role": "user",
+     "content": "Are you able to search? Real quick give me the flight 13 launch profile."
+    },
+    {
+     "role": "assistant",
+     "content": "",
+     "tool_calls": [
+      {
+       "id": "c1",
+       "type": "function",
+       "function": {
+        "name": "searxng_web_search",
+        "arguments": "{\"query\": \"flight 13 launch profile\"}"
+       }
+      }
+     ]
+    },
+    {
+     "role": "tool",
+     "tool_call_id": "c1",
+     "content": "[{\"type\":\"text\",\"text\":\"Title: Starship's Thirteenth Flight Test - SpaceX\\nDescription: The thirteenth flight test of Starship is preparing to launch Friday, July 24. The 90-minute launch window will open at 5:45 p.m. CT. A live webcast of the flight test will begin about 30 minutes before liftoff, which you can watch here and on X @SpaceX. As is the case with all developmental testing, the schedule is dynamic and likely to change, so be sure to check in here and stay tuned to ...\\nURL: https://www.spacex.com/launches/starship-flight-13\\nRelevance Score: 9.000\\n\\nTitle: SpaceX Starship Flight 13 launch updates: SpaceX delays Starship launch ...\\nDescription: SpaceX will launch next Starship rocket today, July 23. Flight 13 will be the second launch of the vehicle's Version 3 configuration and will deploy the first ever Starlink V3 satellites in space.\\nURL: https://www.space.com/news/live/spacex-starship-flight-13-launch-updates-july-23-2026\\nRelevance Score: 1.554\\n\\nTitle: Starship Flight 13 | Starship-Super Heavy v3 | Next Spaceflight\\nDescription: SpaceX will launch a Starship-Super Heavy v3 rocket with Starship Flight 13 from Pad 2 at Starbase, Texas, USA.\\nURL: https://nextspaceflight.com/launches/details/8279/\\nRelevance Score: 1.400\\n\\nTitle: SpaceX Flight 13 Starship Rocket Launch\\nDescription: The SpaceX Starship Flight 13 launch can be delayed by various weather conditions including lightning within 10 nautical miles, high winds (especially upper-level winds), thick cloud layers, precipitation, and poor visibility.\\nURL: https://www.spacelaunchschedule.com/launch/starship-flight-13/\\nRelevance Score: 1.067\\n\\nTitle: \u2022UPDATE\u2022 Thursday's Starship Flight 13 launch attempt has been ...\\nDescription: 19 hours ago ... Here's a quick look at the range safety helicopter fueling up at Starbase ahead of Flight 13, set to launch today, July 23, no earlier than 5:45\u00a0...\\nURL: https://www.facebook.com/NASASpaceflight/videos/update-thursdays-starship-flight-13-launch-attempt-has-been-scrubbed-due-to-bad-/2516344948813485/\\nRelevance Score: 0.821\\n\\nTitle: SpaceX is now targeting Friday, July 24, for Starship's 13th flight test ...\\nDescription: 16 hours ago ... Starship Flight 13 is getting ready for launch! SpaceX is preparing for Starship's thirteenth flight test, targeting liftoff as early as\u00a0...\\nURL: https://www.instagram.com/reel/DbJg8awtkJn/\\nRelevance Score: 0.365\\n\\nTitle: It's a scrub. SpaceX has confirmed that Starship Flight 13 will not ...\\nDescription: 16 hours ago ... The next launch attempt will be made on Friday, July 24 with the launch window opening at 5:45 p.m. CDT / 22:45 UTC. Keep an eye on the NSF\u00a0...\\nURL: https://www.instagram.com/p/DbJfmJilWHe/\\nRelevance Score: 0.311\\n\\nTitle: \\\"Now targeting Friday, July 24 for Starship's thirteenth flight test, due ...\\nDescription: 16 hours ago ... A key objective for the flight test is to get clear imagery from the ground of Starship's heatshield as it flies at a higher dynamic pressure\u00a0...\\nURL: https://www.reddit.com/r/SpaceXLounge/comments/1v4p764/now_targeting_friday_july_24_for_starships/\\nRelevance Score: 0.167\\n\\nTitle: UPDATE\u2022 Thursday's Starship Flight 13 launch attempt ... - Facebook\\nDescription: 2 days ago ... The launch will take place from Pad 2 at Starbase. Following ignition of Booster 20's 33 Raptor engines, the Starship full stack will lift off,\u00a0...\\nURL: https://www.facebook.com/NASASpaceflight/posts/update-thursdays-starship-flight-13-launch-attempt-has-been-scrubbed-due-to-bad-/1702493041876726/\\nRelevance Score: 0.143\\n\\nTitle: Starship flight test 13 - Wikipedia\\nDescription: Starship flight test 13 is the thirteenth planned flight test of the SpaceX Starship launch system, using Booster 20 and Ship 40. [3] During the initial launch attempt on July 16, 2026, the vehicle's flight software triggered an automatic abort at T\u22120 just prior to liftoff after four Raptor engines failed to meet acceptable starting ...\\nURL: https://en.wikipedia.org/wiki/Starship_flight_test_13\\nRelevance Score: 4.000\\n\\nTitle: Starship Flight Test 13 - Starship SpaceX Wiki - Fandom\\nDescription: Starship Flight Test 13 is the second planned test flight of the Starship Block 3 vehicles featuring Booster 20 (B20) and Ship 40 (S40). It is scheduled to launch from Pad B at Starbase NET July 24 2026 5:45 p.m. CT.. While an orbital trajectory was likely previosuly planned for this flight with potential recovery of one or both stages, the outcome of Starship Flight Test 12 on May 22, 2026 ...\\nURL: https://starship-spacex.fandom.com/wiki/Starship_Flight_Test_13\\nRelevance Score: 0.650\\n\\nTitle: Starship 60-second static fire ahead of the thirteenth flight test\\nDescription: Jul 2, 2026 ... SpaceX Aborts Starship Flight 13 AFTER Engine Ignition! ... Maybe they're being more conservative and don't wanna launch with a few ignition\u00a0...\\nURL: https://www.instagram.com/reel/DaS2ugUg0IO/\\nRelevance Score: 0.250\\n\\nTitle: Flight 13 - Launch Countdown - Jul 2026 - Space Launch Live\\nDescription: Mission Profile Flight 13 is a Starship V3 mission operated by SpaceX set to lift off from Orbital Launch Pad 2, SpaceX Starbase, TX, USA on July 24, 2026. The flight is tasked with delivering its payload on a test flight mission to Suborbital. The mission flies on first stage Booster 20. It is flown as part of the SpaceX Starship program.\\nURL: https://spacelaunchlive.com/launches/starship-flight-13/\\nRelevance Score: 0.250\\n\\nTitle: Starship Flight 13 page released : r/SpaceXLounge - Reddit\\nDescription: Jul 12, 2026 ... The thirteenth flight test of Starship is preparing to launch as soon as Thursday, July 16. The 90-minute launch window will open at 5:45 p.m.\u00a0...\\nURL: https://www.reddit.com/r/SpaceXLounge/comments/1utxzzy/starship_flight_13_page_released/\\nRelevance Score: 0.167\\n\\nTitle: SpaceX - Launches\\nDescription: SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.\\nURL: https://www.spacex.com/launches\\nRelevance Score: 0.167\\n\\nTitle: Starship | Flight 13\\nDescription: SpaceX Starship Flight 13 - Launch & Landing - ATTEMPT 3 LAUNCH STREAM Starship launches Flight 13, the second launch of the Block 3 vehicle from Pad 2 at Starbase. This is the third attempt following a T-0 abort on July 16, and a weather scrub on July 23. Launch Window: July 24th at 5:45PM to 7:15PM CDT (22:45-00:15 UTC) Mission: Starship's ...\\nURL: https://spacelaunchnow.me/launch/starship-flight-13/\\nRelevance Score: 0.143\\n\\nTitle: It's a scrub. SpaceX has confirmed that Starship Flight 13 will not ...\\nDescription: 16 hours ago ... It's a scrub. SpaceX has confirmed that Starship Flight 13 will not launch on Thursday, July 23, due to bad weather. The next launch attempt\u00a0...\\nURL: https://www.facebook.com/NASASpaceflight/posts/its-a-scrub-spacex-has-confirmed-that-starship-flight-13-will-not-launch-on-thur/1703336551792375/\\nRelevance Score: 0.125\\n\\nTitle: SpaceX Starship Flight 13 Launch Date: Everything You Need to Know\\nDescription: SpaceX Starship Flight 13 is expected to launch in July 2026. Here's everything you need to know \u2014 launch date, mission profile,and what's at stake.\\nURL: https://rmupdate.com/2026/06/16/spacex-starship-flight-13-launch-date/\\nRelevance Score: 0.111\\n\\nTitle: Starship Flight 13: Booster 20 conducts some sort of test following ...\\nDescription: 2 days ago ... Liftoff is scheduled to occur within a 30 minute launch window that opens on October 13th at 7AM CDT (5AM PDT, 12:00 UTC) from Starship's\u00a0...\\nURL: https://www.facebook.com/NASASpaceflight/posts/starship-flight-13-booster-20-conducts-some-sort-of-test-following-engine-replac/1702282111897819/\\nRelevance Score: 0.111\\n\\nTitle: SpaceX is ready for another Starship test flight - Space Explored\\nDescription: 22 hours ago ... Later today, SpaceX is gearing up for its next attempt at launching its 13th Starship test flight from Starbase, Texas.\\nURL: https://spaceexplored.com/2026/07/23/spacex-is-ready-for-another-starship-test-flight/\\nRelevance Score: 0.100\\n\\nTitle: SpaceX's Insane Plan to Make History in Starship Flight 13! Here's ...\\nDescription: Jul 15, 2026 ... SpaceX's Insane Plan to Make History in Starship Flight 13! Here's Launch ... SpaceX wants to repeat the overall mission profile while\u00a0...\\nURL: https://www.youtube.com/watch?v=VWUIroEKqf8\\nRelevance Score: 0.091\\n\\nTitle: SpaceX aborts Starship Flight 13 launch attempt - SpaceNews\\nDescription: Jul 16, 2026 ... This flight, like Flight 12 on May 22, will be a suborbital test flight. Flight 13 will fly a similar suborbital profile as Flight 12\u00a0...\\nURL: https://spacenews.com/spacex-aborts-starship-flight-13-launch-attempt/\\nRelevance Score: 0.083\\n\\nTitle: SpaceX scrubs Starship 13 launch due to weather\\nDescription: 2 days ago ... During the first launch attempt of the Starship 13 flight test on Thursday, July 16, the countdown clock reached zero and flames and smoke were\u00a0...\\nURL: https://mynews13.com/fl/orlando/space/2026/07/22/spacex-starship-13-test-flight-attempt-2\\nRelevance Score: 0.067\\n\\nTitle: What time is SpaceX's Starship Flight 13 launch on July 24? (Full ...\\nDescription: 23 hours ago ... The next Starship test flight, called Flight 13 (SpaceX doesn't appear to be superstitious), is scheduled to launch from the company's test site\u00a0...\\nURL: https://www.space.com/space-exploration/launches-spacecraft/spacex-starship-flight-13-launch-what-time\\nRelevance Score: 0.063\\n\\nTitle: SpaceX Starship Flight 13 - Stakeout Stream - YouTube\\nDescription: Jul 16, 2026 ... Leading up to NSF's Starship Flight 13 launch broadcast, NSF will go live with over six hours of commentary as we stakeout Starship's 13th\u00a0...\\nURL: https://www.youtube.com/watch?v=BrLI6yj3NH0\\nRelevance Score: 0.059\\n\\nTitle: Watch Starship's thirteenth flight test - SpaceX - Facebook\\nDescription: 15 hours ago ... ... thirteenth flight test https://www. spacex.com/launches/starship-flight-13. David G. Randels and 514 others \u00b7 \udb82\udd25 515 \u00b7 \udb82\udd26 34 \u00b7 \udb82\udd27 99. Profile photo\u00a0...\\nURL: https://www.facebook.com/SpaceXLite/photos/watch-starships-thirteenth-flight-test-httpswwwspacexcomlaunchesstarship-flight-/1082329884401800/\\nRelevance Score: 0.053\\n\\nTitle: SpaceX targeted the launch of Flight 13 during a 90-minute window ...\\nDescription: 6 days ago ... The planned launch profile for this mission will be very similar to what was planned for the first and second flights. Under nominal conditions,\u00a0...\\nURL: https://www.facebook.com/spacecom/posts/spacex-targeted-the-launch-of-flight-13-during-a-90-minute-window-beginning-on-t/1382602693730411/\\nRelevance Score: 0.050\\n\\nTitle: Starship | Flight 13 Mission\\nDescription: Explore the Starship | Flight 13 mission. Get a complete overview of the mission, along with live countdown and real-time video feed.\\nURL: https://rocketlaunch.org/mission-starship-flight-13\\nRelevance Score: 0.100\"}]"
+    }
+   ],
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "searxng_web_search",
+      "description": "Search the web using SearXNG",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        },
+        "time_range": {
+         "type": "string"
+        },
+        "language": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "variant": "fresh",
+   "history": [
+    {
+     "role": "user",
+     "content": "No html, just search and tell me JWST's latest findings."
+    },
+    {
+     "role": "assistant",
+     "content": "",
+     "tool_calls": [
+      {
+       "id": "c1",
+       "type": "function",
+       "function": {
+        "name": "web_search",
+        "arguments": "{\"query\": \"JWST latest findings 2026\"}"
+       }
+      }
+     ]
+    },
+    {
+     "role": "tool",
+     "tool_call_id": "c1",
+     "content": "[{\"type\": \"text\", \"text\": \"Title: the James Webb Space Telescope's latest findings - Official\\nDescription: Overview and latest updates about the James Webb Space Telescope's latest findings. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: the James Webb Space Telescope's latest findings news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: the James Webb Space Telescope's latest findings | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: the James Webb Space Telescope's latest findings on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: the James Webb Space Telescope's latest findings - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: the James Webb Space Telescope's latest findings Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: the James Webb Space Telescope's latest findings tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: the James Webb Space Telescope's latest findings details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\\n\\nTitle: the James Webb Space Telescope's latest findings - Official\\nDescription: Overview and latest updates about the James Webb Space Telescope's latest findings. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: the James Webb Space Telescope's latest findings news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: the James Webb Space Telescope's latest findings | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: the James Webb Space Telescope's latest findings on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: the James Webb Space Telescope's latest findings - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: the James Webb Space Telescope's latest findings Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: the James Webb Space Telescope's latest findings tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: the James Webb Space Telescope's latest findings details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\\n\\nTitle: the James Webb Space Telescope's latest findings - Official\\nDescription: Overview and latest updates about the James Webb Space Telescope's latest findings. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: the James Webb Space Telescope's latest findings news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: the James Webb Space Telescope's latest findings | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: the James Webb Space Telescope's latest findings on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: the James Webb Space Telescope's latest findings - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: the James Webb Space Telescope's latest findings Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: the James Webb Space Telescope's latest findings tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: the James Webb Space Telescope's latest findings details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\"}]"
+    }
+   ],
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "variant": "artifact",
+   "history": [
+    {
+     "role": "user",
+     "content": "Build a small HTML page about SpaceX Starship Flight 13 launch profile."
+    },
+    {
+     "role": "assistant",
+     "content": "Here's the HTML:\n```html\n<!doctype html>\n<html><body><h1>SpaceX Starship Flight 13 launch profile</h1><p>Overview.</p></body></html>\n```"
+    },
+    {
+     "role": "user",
+     "content": "No html, just give me the launch profile. Search for it."
+    },
+    {
+     "role": "assistant",
+     "content": "",
+     "tool_calls": [
+      {
+       "id": "c1",
+       "type": "function",
+       "function": {
+        "name": "web_search",
+        "arguments": "{\"query\": \"flight 13 launch profile\"}"
+       }
+      }
+     ]
+    },
+    {
+     "role": "tool",
+     "tool_call_id": "c1",
+     "content": "[{\"type\": \"text\", \"text\": \"Title: SpaceX Starship Flight 13 launch profile - Official\\nDescription: Overview and latest updates about SpaceX Starship Flight 13 launch profile. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: SpaceX Starship Flight 13 launch profile news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: SpaceX Starship Flight 13 launch profile | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: SpaceX Starship Flight 13 launch profile on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: SpaceX Starship Flight 13 launch profile - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: SpaceX Starship Flight 13 launch profile Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: SpaceX Starship Flight 13 launch profile tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: SpaceX Starship Flight 13 launch profile details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\\n\\nTitle: SpaceX Starship Flight 13 launch profile - Official\\nDescription: Overview and latest updates about SpaceX Starship Flight 13 launch profile. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: SpaceX Starship Flight 13 launch profile news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: SpaceX Starship Flight 13 launch profile | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: SpaceX Starship Flight 13 launch profile on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: SpaceX Starship Flight 13 launch profile - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: SpaceX Starship Flight 13 launch profile Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: SpaceX Starship Flight 13 launch profile tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: SpaceX Starship Flight 13 launch profile details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\\n\\nTitle: SpaceX Starship Flight 13 launch profile - Official\\nDescription: Overview and latest updates about SpaceX Starship Flight 13 launch profile. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: SpaceX Starship Flight 13 launch profile news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: SpaceX Starship Flight 13 launch profile | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: SpaceX Starship Flight 13 launch profile on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: SpaceX Starship Flight 13 launch profile - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: SpaceX Starship Flight 13 launch profile Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: SpaceX Starship Flight 13 launch profile tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: SpaceX Starship Flight 13 launch profile details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\"}]"
+    }
+   ],
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "variant": "artifact",
+   "history": [
+    {
+     "role": "user",
+     "content": "Build a small HTML page about the Eiffel Tower."
+    },
+    {
+     "role": "assistant",
+     "content": "Here's the HTML:\n```html\n<!doctype html>\n<html><body><h1>the Eiffel Tower</h1><p>Overview.</p></body></html>\n```"
+    },
+    {
+     "role": "user",
+     "content": "Skip the doc \u2014 just tell me its exact height. Search it."
+    },
+    {
+     "role": "assistant",
+     "content": "",
+     "tool_calls": [
+      {
+       "id": "c1",
+       "type": "function",
+       "function": {
+        "name": "web_search",
+        "arguments": "{\"query\": \"Eiffel Tower exact height\"}"
+       }
+      }
+     ]
+    },
+    {
+     "role": "tool",
+     "tool_call_id": "c1",
+     "content": "[{\"type\": \"text\", \"text\": \"Title: the Eiffel Tower - Official\\nDescription: Overview and latest updates about the Eiffel Tower. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: the Eiffel Tower news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: the Eiffel Tower | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: the Eiffel Tower on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: the Eiffel Tower - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: the Eiffel Tower Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: the Eiffel Tower tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: the Eiffel Tower details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\\n\\nTitle: the Eiffel Tower - Official\\nDescription: Overview and latest updates about the Eiffel Tower. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: the Eiffel Tower news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: the Eiffel Tower | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: the Eiffel Tower on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: the Eiffel Tower - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: the Eiffel Tower Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: the Eiffel Tower tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: the Eiffel Tower details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\\n\\nTitle: the Eiffel Tower - Official\\nDescription: Overview and latest updates about the Eiffel Tower. Schedule dynamic and likely to change.\\nURL: https://example.com/1\\nRelevance Score: 9.0\\n\\nTitle: the Eiffel Tower news\\nDescription: Breaking coverage with times, dates, and logistics. 90-minute window opens 5:45pm.\\nURL: https://news.example.com/2\\nRelevance Score: 1.5\\n\\nTitle: the Eiffel Tower | Wikipedia\\nDescription: Encyclopedic detail: history, prior attempts, technical parameters, participants.\\nURL: https://en.wikipedia.org/wiki/x\\nRelevance Score: 4.0\\n\\nTitle: the Eiffel Tower on Reddit\\nDescription: User discussion threads, speculation, and links to primary sources.\\nURL: https://reddit.com/r/x\\nRelevance Score: 0.3\\n\\nTitle: the Eiffel Tower - YouTube\\nDescription: Livestream and replay video coverage, stakeout streams, commentary.\\nURL: https://youtube.com/watch?v=x\\nRelevance Score: 0.2\\n\\nTitle: the Eiffel Tower Facebook post\\nDescription: Social post with a partial description and many comments.\\nURL: https://facebook.com/x\\nRelevance Score: 0.1\\n\\nTitle: the Eiffel Tower tracker\\nDescription: Live tracker with countdown, weather, and visibility scoring for your location.\\nURL: https://tracker.example.com/x\\nRelevance Score: 0.5\\n\\nTitle: the Eiffel Tower details\\nDescription: In-depth breakdown: key objective, profile, recovery plan, payload manifest.\\nURL: https://deep.example.com/x\\nRelevance Score: 2.3\"}]"
+    }
+   ],
+   "tools": [
+    {
+     "type": "function",
+     "function": {
+      "name": "web_search",
+      "description": "Search the web",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "query": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "query"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

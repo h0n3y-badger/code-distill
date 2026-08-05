@@ -63,3 +63,28 @@ gen_c_hard.log
 bench/*.jsonl
 bench/*.out
 bench/*.json
+
+# --- universal-model pivot: teacher weights, raw gen data, merged model ---
+# NB: gitignore only honours '#' at line start, so keep comments on their own line.
+# 20GB Qwen2.5-32B-Instruct GGUF (never commit weights)
+teacher/
+web_raw.jsonl
+chat_raw.jsonl
+tools_raw.jsonl
+# derived: replay + new (rebuildable via mix.py)
+clean_universal.jsonl
+heldout_universal.jsonl
+# merged fp16 universal model, all versions
+qwen-uni-7b/
+qwen-uni-7b-v*/
+# LoRA checkpoints + per-version adapters
+out_uni/
+out_uni_adapter/
+out_uni_v*_adapter/
+smoke_web.jsonl
+smoke_chat.jsonl
+smoke_tools.jsonl
+# per-version eval transcripts (kept locally for quizzing)
+uni_eval_*.json
+# vendored build tree
+llama.cpp/

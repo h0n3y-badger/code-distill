@@ -1,0 +1,1 @@
+done | v12 RATE 1/60 = 2% HTML-doc  (model=qwen-uni-7b-v12-q5_k_m.gguf temp=0.8) (v11 15%) | RATE 0/60 = 0% HTML-doc  (model=qwen-uni-7b-v12-q5_k_m.gguf temp=0.4) (v11 10%) | | uni-12 | 5/12 (42%) | 8/8 (100%) | 8/8 (100%) | 100% | 2026-07-24 |
